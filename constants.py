@@ -1,8 +1,8 @@
 # constants.py
 
 # Kích thước màn hình
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 700
 
 # Kích thước ô vuông
 CELL_SIZE = 20
@@ -20,4 +20,5 @@ BUTTON_COLORS = {
 }
 BUTTON_FONT = ("Helvetica", 12)
 SCORE_FONT = ("Helvetica", 12)
+HIGH_SCORE_FONT = ("Helvetica", 25)
 GAME_OVER_FONT = ("Helvetica", 20)
