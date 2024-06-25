@@ -1,5 +1,3 @@
-# main.py
-
 from gui import SnakeGUI
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 from constants import *
 
+
 class SnakeGame(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -11,7 +12,8 @@ class SnakeGame(tk.Tk):
         self.configure(bg=BACKGROUND_COLOR)
 
         self.canvas = tk.Canvas(self, bg="#E0E0E0", highlightthickness=0)
-        self.canvas.place(x=10, y=10, width=SCREEN_WIDTH-20, height=SCREEN_HEIGHT-100)  # Updated position and size
+        self.canvas.place(x=10, y=10, width=SCREEN_WIDTH -
+                          20, height=SCREEN_HEIGHT-100)
         self.canvas.create_rectangle(
             0, 0, SCREEN_WIDTH - 20, SCREEN_HEIGHT - 100, outline=BORDER_COLOR, width=2)
 
@@ -22,39 +24,47 @@ class SnakeGame(tk.Tk):
         self.high_score = self.load_high_score()
         self.game_running = False
         self.paused = False
+        self.speed = MEDIUM_SPEED  # Default speed
 
         self.score_label = tk.Label(
             self, text="", font=SCORE_FONT, bg=BACKGROUND_COLOR, fg="black")
-        self.score_label.place(x=10, y=SCREEN_HEIGHT-85)  # Updated position
+        self.score_label.place(x=10, y=SCREEN_HEIGHT-85)
 
-        self.high_score_label = tk.Label(
-            self, text=f"High Score: {self.high_score}", font=HIGH_SCORE_FONT, bg=BACKGROUND_COLOR, fg="black")
+        self.high_score_label = tk.Label(self, text=f"High Score: {
+                                         self.high_score}", font=HIGH_SCORE_FONT, bg=BACKGROUND_COLOR, fg="black")
         self.high_score_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         self.button_frame = tk.Frame(self, bg=BACKGROUND_COLOR)
-        self.button_frame.place(x=10, y=SCREEN_HEIGHT-50, width=SCREEN_WIDTH-20)  # Updated position
+        self.button_frame.place(x=10, y=SCREEN_HEIGHT -
+                                50, width=SCREEN_WIDTH-20)
 
-        self.start_button = tk.Button(self.button_frame, text="Start", font=BUTTON_FONT,
-                                      command=self.start_game, bg=BUTTON_COLORS["start"], fg="white", relief=tk.FLAT, bd=0)
+        self.start_button = tk.Button(self.button_frame, text="Start", font=BUTTON_FONT, command=self.start_game,
+                                      bg=BUTTON_COLORS["start"], fg="white", relief=tk.FLAT, bd=0)
         self.start_button.pack(side=tk.LEFT, padx=10)
 
         self.stop_button = tk.Button(self.button_frame, text="Stop", font=BUTTON_FONT, command=self.stop_game,
                                      bg=BUTTON_COLORS["stop"], fg="white", relief=tk.FLAT, state=tk.DISABLED, bd=0)
         self.stop_button.pack(side=tk.LEFT, padx=10)
 
-        self.quit_button = tk.Button(self.button_frame, text="Quit", font=BUTTON_FONT,
-                                     command=self.quit_game, bg=BUTTON_COLORS["quit"], fg="white", relief=tk.FLAT, bd=0)
+        self.reset_button = tk.Button(self.button_frame, text="Reset", font=BUTTON_FONT, command=self.reset_game,
+                                      bg=BUTTON_COLORS["start"], fg="white", relief=tk.FLAT, state=tk.DISABLED, bd=0)
+        self.reset_button.pack(side=tk.LEFT, padx=10)
+
+        self.quit_button = tk.Button(self.button_frame, text="Quit", font=BUTTON_FONT, command=self.quit_game,
+                                     bg=BUTTON_COLORS["quit"], fg="white", relief=tk.FLAT, bd=0)
         self.quit_button.pack(side=tk.LEFT, padx=10)
 
         self.bind("<KeyPress>", self.change_direction)
 
-    def start_game(self):
+    def start_game(self, speed=MEDIUM_SPEED):
         if not self.game_running:
+            self.speed = speed  # Set the speed
             self.game_running = True
             self.start_button.config(state=tk.DISABLED)
-            self.quit_button.config(state=tk.DISABLED)
             self.stop_button.config(state=tk.NORMAL)
-            self.high_score_label.place_forget()  # Hide high score label
+            self.quit_button.config(state=tk.DISABLED)
+            self.reset_button.config(state=tk.NORMAL)
+            self.high_score_label.place_forget()
             self.reset_game()
             self.move_snake()
 
@@ -80,6 +90,7 @@ class SnakeGame(tk.Tk):
         self.create_food()
         self.update_score()
         self.update_high_score()
+        self.move_snake()  # Restart the snake movement after resetting
 
     def create_food(self):
         while True:
@@ -130,7 +141,7 @@ class SnakeGame(tk.Tk):
                 return
 
             self.update_snake()
-            self.after(200, self.move_snake)
+            self.after(self.speed, self.move_snake)
 
     def update_snake(self):
         self.canvas.delete("snake")
@@ -167,4 +178,5 @@ class SnakeGame(tk.Tk):
         self.start_button.config(state=tk.NORMAL)
         self.quit_button.config(state=tk.NORMAL)
         self.stop_button.config(state=tk.DISABLED)
-        self.high_score_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)  # Hiển thị lại high score khi game over
+        self.reset_button.config(state=tk.DISABLED)
+        self.high_score_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
